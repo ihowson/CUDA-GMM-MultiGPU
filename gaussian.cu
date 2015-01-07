@@ -112,13 +112,15 @@ void cleanup_profile_t(profile_t* p) {
  * Seeds the cluster centers (means) with random data points
  */
 void seed_clusters(clusters_t* clusters, float* fcs_data, int num_clusters, int num_dimensions, int num_events) {
-    float fraction;
     int seed;
+    /*
+    float fraction;
     if(num_clusters > 1) {
         fraction = (num_events-1.0f)/(num_clusters-1.0f);
     } else {
         fraction = 0.0;
     }
+    */
     srand((unsigned int) time(NULL));
     // Sets the means from evenly distributed points in the input data
     for(int c=0; c < num_clusters; c++) {
@@ -887,8 +889,8 @@ main( int argc, char** argv) {
 
     //cutStartTimer(timer_io);
  
-    char* result_suffix = ".results";
-    char* summary_suffix = ".summary";
+    const char* result_suffix = ".results";
+    const char* summary_suffix = ".summary";
     int filenamesize1 = strlen(argv[3]) + strlen(result_suffix) + 1;
     int filenamesize2 = strlen(argv[3]) + strlen(summary_suffix) + 1;
     char* result_filename = (char*) malloc(filenamesize1);

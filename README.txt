@@ -11,6 +11,38 @@ Kate Gleason College of Engineering
 Rochester Institute of Technology
 Rochester, New York
 
+=== Ian Howson's branch ===
+
+This branch has been updated to run on the current version of the CUDA toolkit (as of 2014).
+
+To run on OS X Mavericks or Yosemite, you need to install OpenMP/Clang. Instructions are at http://clang-omp.github.io/, or follow these (which are tweaked a little).
+
+Check out the three repositories:
+
+    git clone https://github.com/clang-omp/llvm
+    git clone https://github.com/clang-omp/compiler-rt llvm/projects/compiler-rt
+    git clone -b clang-omp https://github.com/clang-omp/clang llvm/tools/clang
+
+Then, in the `llvm` directory, run:
+
+    ./configure --enable-optimized
+    make
+    # make install
+
+Set up your environment. Add the following to your `.bashrc` or `.zshrc`:
+
+    export PATH=/install/prefix/bin:$PATH
+    export C_INCLUDE_PATH=/install/prefix/include:<OpenMP include path>:$C_INCLUDE_PATH
+    export CPLUS_INCLUDE_PATH=/install/prefix/include:<OpenMP include path>:$CPLUS_INCLUDE_PATH
+    export LIBRARY_PATH=/install/prefix/lib:<OpenMP library path>:$LIBRARY_PATH
+    export LD_LIBRARY_PATH=/install/prefix/lib:<OpenMP library path>:$LD_LIBRARY_PATH
+
+Install the Intel OpenMP Runtime Library:
+
+    # In ~/nosync:
+    wget https://www.openmprtl.org/sites/default/files/libomp_20141212_oss.tgz
+    tar xvfz libomp_2014_1212_oss.tgz
+
 === About ===
 This software does multivariate data clustering using Expectation Maximization with a Gaussian mixture model algorithms using NVIDIA's CUDA framework. A CUDA-capable GPU is required to run the programs.
 For a list of CUDA-capable GPUs please consult the NVIDIA documentation available here: http://www.nvidia.com/object/cuda_gpus.html

@@ -1,0 +1,6 @@
+*.o
+gmm
+*.results
+*.summary
+
+
