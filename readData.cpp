@@ -67,8 +67,7 @@ float* readCSV(char* f, int* ndims, int* nevents) {
         }
 
         file.close();
-    }
-    else {
+    } else {
         cout << "Unable to read the file " << f << endl;
         return NULL;
     }

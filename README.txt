@@ -43,6 +43,58 @@ Install the Intel OpenMP Runtime Library:
     wget https://www.openmprtl.org/sites/default/files/libomp_20141212_oss.tgz
     tar xvfz libomp_2014_1212_oss.tgz
 
+=== Ian's notes on data input formats ===
+
+The easiest type of data to put use is CSV format. The file extension must be `.csv`. The first line is assumed to be a header, so don't put data in there. The delimiter must be commas. For example, to use the Old Faithful dataset, it should look something like:
+
+    "eruptions","waiting"
+    3.6,79
+    1.8,54
+    3.333,74
+    2.283,62
+    4.533,85
+
+For simplicity, we're just going to generate the 'waiting' data. You can generate this from R like so:
+
+    write.table(faithful[,2], file='faithful_waiting.csv', sep=',', row.names=FALSE)
+
+`gmm` also accepts FCS data using the `.bin` extension. I don't use this, so I don't know if it actually works.
+
+=== Ian's notes on example usage ===
+
+Assuming that you've generated `faithful_waiting.csv`, run `gmm` like so:
+
+    ./gmm 3 ../datasets/faithful_waiting.csv out
+
+This produces the following output. The cluster ordering might change.
+
+    Cluster #0
+    Probability: 0.356555
+    N: 91.277954
+    Means: 54.701801
+
+    R Matrix:
+    31.954313
+
+
+    Cluster #1
+    Probability: 0.643446
+    N: 164.722061
+    Means: 80.037453
+
+    R Matrix:
+    35.625160
+
+To compare this against R's `mixtools` package, run the following R script:
+
+    require(mixtools)
+    result <- normalmixEM(faithful[,2], k=2)
+    # number of iterations= 31
+    result$mu
+    # [1] 54.6149 80.0911
+
+Noe that the `mu` outputs are extremely close to the 'Means' in the `gmm` output.
+
 === About ===
 This software does multivariate data clustering using Expectation Maximization with a Gaussian mixture model algorithms using NVIDIA's CUDA framework. A CUDA-capable GPU is required to run the programs.
 For a list of CUDA-capable GPUs please consult the NVIDIA documentation available here: http://www.nvidia.com/object/cuda_gpus.html
