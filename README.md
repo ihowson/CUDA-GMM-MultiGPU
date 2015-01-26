@@ -29,19 +29,54 @@ Then, in the `llvm` directory, run:
     make
     # make install
 
-Set up your environment. Add the following to your `.bashrc` or `.zshrc`:
-
-    export PATH=/install/prefix/bin:$PATH
-    export C_INCLUDE_PATH=/install/prefix/include:<OpenMP include path>:$C_INCLUDE_PATH
-    export CPLUS_INCLUDE_PATH=/install/prefix/include:<OpenMP include path>:$CPLUS_INCLUDE_PATH
-    export LIBRARY_PATH=/install/prefix/lib:<OpenMP library path>:$LIBRARY_PATH
-    export LD_LIBRARY_PATH=/install/prefix/lib:<OpenMP library path>:$LD_LIBRARY_PATH
-
 Install the Intel OpenMP Runtime Library:
 
     # In ~/nosync:
     wget https://www.openmprtl.org/sites/default/files/libomp_20141212_oss.tgz
     tar xvfz libomp_2014_1212_oss.tgz
+
+then build it per the online instructions.
+
+Set up your environment. Stick the following into a file called `setenv.sh`:
+
+    # the path where you downloaded the source code
+    LLVM=~/nosync/llvm
+    LIBOMP=~/nosync/libomp_oss
+
+    # make sure you build with the release flag
+    # ./configure --enable-optimized
+
+    CLANG_BIN=$LLVM/Release+Asserts/bin
+    CLANG_INCLUDE=$LLVM/include
+    CLANG_LIB=$LLVM/Release+Asserts/lib
+
+    OPENMP_INCLUDE=$LIBOMP/exports/common/include
+    OPENMP_LIB=$LIBOMP/exports/mac_32e/lib.thin
+
+    export PATH=$CLANG_BIN:$PATH
+    export C_INCLUDE_PATH=$CLANG_INCLUDE:$OPENMP_INCLUDE:$C_INCLUDE_PATH
+    export CPLUS_INCLUDE_PATH=$CLANG_INCLUDE:$OPENMP_INCLUDE:$C_INCLUDE_PATH
+    export LIBRARY_PATH=$CLANG_LIB:$OPENMP_LIB:$LIBRARY_PATH
+    export DYLD_LIBRARY_PATH=$CLANG_LIB:$OPENMP_LIB:$DYLD_LIBRARY_PATH
+
+Modify `LLVM` and `LIBOMP` to match the location where you have the `llvm` and `libomp` source code.
+
+Then, when you want to run CUDA software, first type:
+
+    source setenv.sh
+
+This will set up the paths and environment correctly without permanently modifying your system.
+
+==== On Yosemite ====
+
+If you see something like
+
+    ld: library not found for -lgomp
+    clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
+Yosemite has a security feature where $PATH is [not inherited to child processes](https://bugs.r-project.org/bugzilla3/show_bug.cgi?id=16042).
+
+The easiest way that I've found to work around this is to run `bash`, then `source setenv.sh` again. Run everything within the `bash` instance.
 
 === Ian's notes on data input formats ===
 
